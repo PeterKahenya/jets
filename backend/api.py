@@ -5,6 +5,7 @@ from pymongo import MongoClient,ReturnDocument
 from bson import json_util,ObjectId
 import json
 
+
 app = Flask(__name__)
 api = Api(app)
 client = MongoClient('localhost', 27017)
@@ -60,6 +61,15 @@ class SingleTask(Resource):
 
 api.add_resource(TasksList, '/tasks/')
 api.add_resource(SingleTask, '/tasks/<string:id>/')
+
+
+# Deals with CORS for Now!
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    return response
 
 
 if __name__ == '__main__':
