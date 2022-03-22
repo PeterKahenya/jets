@@ -4,10 +4,15 @@ from flask_restful import Resource, Api
 from pymongo import MongoClient,ReturnDocument
 from bson import json_util,ObjectId
 import json
+from flask_cors import CORS
 
 
 app = Flask(__name__)
 api = Api(app)
+CORS(app)
+# app.config['CORS_METHODS'] = ["GET", "HEAD", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"]
+# app.config['CORS_AUTOMATIC_OPTIONS'] = True
+
 client = MongoClient('localhost', 27017)
 db = client["jets"]
 tasks = db["tasks"] #Tasks Collection
@@ -59,17 +64,17 @@ class SingleTask(Resource):
             return {"message":"Object not found!"},404 
 
 
-api.add_resource(TasksList, '/tasks/')
-api.add_resource(SingleTask, '/tasks/<string:id>/')
+api.add_resource(TasksList, '/api/tasks/')
+api.add_resource(SingleTask, '/api/tasks/<string:id>/')
 
 
 # Deals with CORS for Now!
-@app.after_request
-def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-    return response
+# @app.after_request
+# def after_request(response):
+#     response.headers.add('Access-Control-Allow-Origin', '*')
+#     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+#     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+#     return response
 
 
 if __name__ == '__main__':

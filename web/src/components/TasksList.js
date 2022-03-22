@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom";
 import Task from './Task';
 const axios = require('axios');
 
@@ -6,19 +7,25 @@ const axios = require('axios');
 class TaskList extends Component {
     constructor(props) {
         super(props);
-        this.state = { tasks:[] }
+        this.state = {is_deleted:false }
+        this.deleteTask = this.deleteTask.bind(this)
     }
-    componentDidMount(){
-        axios.get("http://localhost:5000/tasks/").then(response=>{
-            this.setState({tasks:response.data})
-        })
-        
+
+    componentDidUpdate(){
+        console.log("componentDidUpdate")
     }
+    
+    async deleteTask(task){
+        this.props.DeleteTask(task)
+    }
+    
     render() { 
         return ( <div>
+            <Link to="/tasks/add">Add Task</Link>
             <h3>Task List</h3>
-            {this.state.tasks.map(task=><div key={task._id}>
-                <Task task={task} />
+            
+            {this.props.tasks.map(task=><div key={task._id}>
+                <Task task={task} deleteTask={this.deleteTask} />
                 <hr/>
                 </div>)}
         </div> );

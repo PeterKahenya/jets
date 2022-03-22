@@ -3,6 +3,7 @@ const webpack = require("webpack");
 
 module.exports = {
   entry: "./src/index.js",
+  devtool:false,
   mode: "development",
   module: {
     rules: [
@@ -15,7 +16,15 @@ module.exports = {
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"]
-      }
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+          },
+        ],
+      },
     ]
   },
   resolve: { extensions: ["*", ".js", ".jsx"] },
@@ -25,10 +34,12 @@ module.exports = {
     filename: "bundle.js"
   },
   devServer: {
-    contentBase: path.join(__dirname, "public/"),
+    static: path.join(__dirname, "public/"),
+    historyApiFallback:true,
     port: 3000,
-    publicPath: "http://localhost:3000/dist/",
-    hotOnly: true
+    // publicPath: "http://localhost:3000/dist/",
+    hot: true,
+    // watchContentBase: true
   },
   plugins: [new webpack.HotModuleReplacementPlugin()]
 };
